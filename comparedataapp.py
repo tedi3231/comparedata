@@ -3,6 +3,7 @@ import tkMessageBox
 import tkFileDialog
 import os.path
 import dealcsv
+import ttk
 
 ALLOWFILETYPES =[("PDF File","*.pdf"), ("Excel File","*.xls"), ("Word File","*.docx"),("CSV File","*.csv")]
 
@@ -58,6 +59,10 @@ class Application(Frame):
         headercolumns = dealcsv.get_headers(filename)
         for item in headercolumns:
             self.list_firstfilecolumns.insert(0,item)
+
+        #processbar = ttk.Progressbar(self,maximum=100,length=250)
+        #self.processbar.pack()
+        #processbar.start()
 
     def selectsecondfile(self,filename):
         self.txt_secondfilename.delete(0,END)
