@@ -45,12 +45,17 @@ class Application(Frame):
             tkMessageBox.showwarning(title="Wanring",message="The selected file can't be empty")
         
         if event and event.widget == self.bt_openfirstfile:
-            self.txt_firstfilename.delete(0,END)
-            self.txt_firstfilename.insert(0,filename)
+            self.selectfirstfile(filename)
         elif event and event.widget == self.bt_opensecondfile:
-            self.txt_secondfilename.delete(0,END)
-            self.txt_secondfilename.insert(0,filename)
+            self.selectsecondfile(filename)
 
+    def selectfirstfile(self,filename):
+        self.txt_firstfilename.delete(0,END)
+        self.txt_firstfilename.insert(0,filename)
+
+    def selectsecondfile(self,filename):
+        self.txt_secondfilename.delete(0,END)
+        self.txt_secondfilename.insert(0,filename)
 
 if __name__ == "__main__":
     master = Tk()
