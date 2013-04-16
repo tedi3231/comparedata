@@ -12,8 +12,8 @@ class Application(Frame):
         self.lb_chooseFirstFile = Label(self,text="Choose File")
         self.lb_chooseSecondFile = Label(self,text="Choose File")
         
-        self.txt_firstfilename = Entry(self,width=80)
-        self.txt_secondfilename = Entry(self,width=80)
+        self.txt_firstfilename = Entry(self,width=50)
+        self.txt_secondfilename = Entry(self,width=50)
         
         self.bt_openfirstfile = Button(self,text="OPEN FILE")
         self.bt_opensecondfile = Button(self,text="OPEN FILE")
@@ -27,9 +27,14 @@ class Application(Frame):
         self.txt_firstfilename.grid(row=0,column=1)
         self.txt_secondfilename.grid(row=1,column=1)
 
-        self.bt_openfirstfile.grid(row=0,column=2)
-        self.bt_opensecondfile.grid(row=1,column=2)
+        self.bt_openfirstfile.grid(row=0,column=2,columnspan=2)
+        self.bt_opensecondfile.grid(row=1,column=2,columnspan=2)
 
+        self.list_firstfilecolumns = Listbox(self,width=30)
+        self.list_secondfilecolumns = Listbox(self,width=30)
+
+        self.list_firstfilecolumns.grid(row=2,columnspan=2,sticky=W)
+        self.list_secondfilecolumns.grid(row=2,columnspan=2,sticky=E)
         self.pack()
 
     def selectFile(self,event):
