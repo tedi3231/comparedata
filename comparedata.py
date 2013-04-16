@@ -21,8 +21,10 @@ def comparedata(data1,data2,columns,includecolumns):
             #secondval = second_row[firstcolumn]
             #if firstval == secondval:
             #    result.append({'data1_%s'%firstcolumn:firstval,'data2_%s'%firstcolumn:secondval})
-            result.append(_createrow(first_row,second_row,firstcolumn,includecolumns))
-            break
+            result_row = _createrow(first_row,second_row,firstcolumn,includecolumns)
+            if result_row:
+                result.append(result_row)
+                break
     return result
 
 def _createrow(first_row,second_row, firstcolumn,includecolumns):
@@ -33,6 +35,14 @@ def _createrow(first_row,second_row, firstcolumn,includecolumns):
     @firstcolumn        column names
     @includecolumns     all columns which should be included in result 
     """
+    firstval = str(first_row[firstcolumn])
+    secondval = str(second_row[firstcolumn])
+    firstval = firstval and firstval.strip()
+    secondval = secondval and secondval.strip()
+
+    if firstval<> secondval:
+        return None
+
     result = {}
     result['data1_%s'%firstcolumn] = first_row[firstcolumn]
 
