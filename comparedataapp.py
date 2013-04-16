@@ -2,8 +2,9 @@ from Tkinter import *
 import tkMessageBox
 import tkFileDialog
 import os.path
+import dealcsv
 
-ALLOWFILETYPES =[("PDF File","*.pdf"), ("Excel File","*.xls"), ("Word File","*.docx"),("Python File","*.py")]
+ALLOWFILETYPES =[("PDF File","*.pdf"), ("Excel File","*.xls"), ("Word File","*.docx"),("CSV File","*.csv")]
 
 class Application(Frame):
     def __init__(self,master):
@@ -35,14 +36,16 @@ class Application(Frame):
 
         self.list_firstfilecolumns.grid(row=2,columnspan=2,sticky=W)
         self.list_secondfilecolumns.grid(row=2,columnspan=2,sticky=E)
+        
+
+        self.bt_comparedata = Button(self,text="Start comparing data")
+        self.bt_comparedata.grid(row=3,columnspan=3,sticky=W)
+        self.bt_comparedata.bind("<Button-1>",self.comparedata)
+
         self.pack()
 
     def selectFile(self,event):
-        #print event.widget == self.bt_opensecondfile
-        #print dir(event.widget)
         filename = tkFileDialog.askopenfilename(title="Please choose a file",filetypes=ALLOWFILETYPES)
-        if( os.path.getsize(filename)<=100 ):
-            tkMessageBox.showwarning(title="Wanring",message="The selected file can't be empty")
         
         if event and event.widget == self.bt_openfirstfile:
             self.selectfirstfile(filename)
@@ -52,10 +55,25 @@ class Application(Frame):
     def selectfirstfile(self,filename):
         self.txt_firstfilename.delete(0,END)
         self.txt_firstfilename.insert(0,filename)
+        headercolumns = dealcsv.get_headers(filename)
+        for item in headercolumns:
+            self.list_firstfilecolumns.insert(0,item)
 
     def selectsecondfile(self,filename):
         self.txt_secondfilename.delete(0,END)
         self.txt_secondfilename.insert(0,filename)
+
+        headercolumns = dealcsv.get_headers(filename)
+        for item in headercolumns:
+            self.list_secondfilecolumns.insert(0,item)
+
+    def comparedata(self,event):
+        firstfile = self.txt_firstfilename.get()
+        secondfile = self.txt_secondfilename.get()
+        firstdatas = dealcsv.get_content_with_directory(firstfile)
+        seconddatas = dealcsv.get_content_with_directory(secondfile)
+        print firstdatas
+        print seconddatas
 
 if __name__ == "__main__":
     master = Tk()
