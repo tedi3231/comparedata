@@ -13,8 +13,8 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
         raise Exception("please special comparing columns")
     firstcolumn =  firstcolumns[0]
     secondcolumn = secondcolumns[0]
-    print firstcolumn
-    print secondcolumn
+    #print firstcolumn
+    #print secondcolumn
     
     if not data1[0].has_key(firstcolumn):
         raise Exception("data1don't have special column %s"%firstcolumn)
@@ -45,7 +45,10 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
     secondval = str(second_row[secondcolumn])
     firstval = firstval and firstval.strip()
     secondval = secondval and secondval.strip()
-
+	
+    if not firstval or not secondval:
+		return None
+		
     if firstval<> secondval:
         return None
 
@@ -53,8 +56,7 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
     result['data1_%s'%firstcolumn] = firstval
 
     if firstincludecolumns:
-        for item in firstincludecolumns:
-            print item
+        for item in firstincludecolumns:            
             result['data1_%s'%item] = first_row[item]
         
     result['data2_%s'%secondcolumn] = second_row[secondcolumn]
