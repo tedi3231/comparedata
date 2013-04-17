@@ -1,11 +1,13 @@
+# -*- coding: utf-8 -*-
 from Tkinter import *
 import tkMessageBox
 import tkFileDialog
 import os.path
 import dealcsv
 import ttk
+import comparedata
 
-ALLOWFILETYPES =[("PDF File","*.pdf"), ("Excel File","*.xls"), ("Word File","*.docx"),("CSV File","*.csv")]
+ALLOWFILETYPES =[("CSV File","*.csv"),("Excel File","*.xls")]
 
 class Application(Frame):
     def __init__(self,master):
@@ -32,8 +34,8 @@ class Application(Frame):
         self.bt_openfirstfile.grid(row=0,column=2,columnspan=2)
         self.bt_opensecondfile.grid(row=1,column=2,columnspan=2)
 
-        self.list_firstfilecolumns = Listbox(self,width=30)
-        self.list_secondfilecolumns = Listbox(self,width=30)
+        self.list_firstfilecolumns = Listbox(self,width=30,exportselection=False)
+        self.list_secondfilecolumns = Listbox(self,width=30,exportselection=False)
 
         self.list_firstfilecolumns.grid(row=2,columnspan=2,sticky=W)
         self.list_secondfilecolumns.grid(row=2,columnspan=2,sticky=E)
@@ -75,10 +77,38 @@ class Application(Frame):
     def comparedata(self,event):
         firstfile = self.txt_firstfilename.get()
         secondfile = self.txt_secondfilename.get()
-        firstdatas = dealcsv.get_content_with_directory(firstfile)
-        seconddatas = dealcsv.get_content_with_directory(secondfile)
-        print firstdatas
-        print seconddatas
+
+        #print 'firstfile=%s,secondfile=%s'%(firstfile,secondfile)
+        
+        if firstfile.strip()=='':
+            tkMessageBox.showerror(title="Error",message="First file can't be empty")
+            return
+
+        if secondfile.strip()=='':
+            tkMessageBox.showerror(title="Error",message="Second file can't be empty")
+            return
+        
+        #firstdatas = dealcsv.get_content_with_directory(firstfile)
+        #seconddatas = dealcsv.get_content_with_directory(secondfile)
+
+        first_selected_columns = self.list_firstfilecolumns.curselection()
+        second_selected_columns = self.list_secondfilecolumns.curselection()
+
+        if not first_selected_columns:
+            tkMessageBox.showerror(title="Error",message="First file no column selected")
+            return
+
+        if not second_selected_columns:
+            tkMessageBox.showerror(title="Error",message="Second file no column selected")
+            return
+
+        columns = self.list_firstfilecolumns.get(first_selected_columns[0])
+        #print columns
+        import datetime
+        print datetime.datetime.now()
+        result = comparedata.comparecsv(firstfile,secondfile,[columns])
+        print datetime.datetime.now()
+        print len(result)
 
 if __name__ == "__main__":
     master = Tk()

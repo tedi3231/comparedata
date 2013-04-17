@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+import dealcsv
 
-def comparedata(data1,data2,columns,includecolumns):
+def comparedata(data1,data2,columns,includecolumns=None):
     """
     compare two directory with special keys
     @data1 directory
@@ -18,14 +20,26 @@ def comparedata(data1,data2,columns,includecolumns):
     for first_row in data1:
         firstval = first_row[firstcolumn]
         for second_row in data2:
-            #secondval = second_row[firstcolumn]
-            #if firstval == secondval:
-            #    result.append({'data1_%s'%firstcolumn:firstval,'data2_%s'%firstcolumn:secondval})
             result_row = _createrow(first_row,second_row,firstcolumn,includecolumns)
             if result_row:
                 result.append(result_row)
                 break
     return result
+
+def comparecsv(firstfile,secondfile,columns,includecolumns=None,determiter=','):
+    """
+    @purpose        Compare two csv file
+    @firstfile      first csv file
+    @secondfile     second csv file
+    @columns        compare columns
+    @determiter     sepater character
+    @includecolumns should be included in result
+    @reutrn [{},{}]
+    """
+    data1 = dealcsv.get_content_with_directory(firstfile,determiter)
+    data2 = dealcsv.get_content_with_directory(secondfile,determiter)
+    return comparedata(data1,data2,columns,includecolumns)
+
 
 def _createrow(first_row,second_row, firstcolumn,includecolumns):
     """
@@ -46,12 +60,15 @@ def _createrow(first_row,second_row, firstcolumn,includecolumns):
     result = {}
     result['data1_%s'%firstcolumn] = first_row[firstcolumn]
 
-    for item in includecolumns[0]:
-        result['data1_%s'%item] = first_row[item]
-    result['data2_%s'%firstcolumn] = second_row[firstcolumn]
+    if includecolumns:
+        for item in includecolumns[0]:
+            result['data1_%s'%item] = first_row[item]
         
-    for item in includecolumns[0]:
-        result['data2_%s'%item] = second_row[item]
+    result['data2_%s'%firstcolumn] = second_row[firstcolumn]
+
+    if includecolumns:    
+        for item in includecolumns[0]:
+            result['data2_%s'%item] = second_row[item]
 
     return result
 

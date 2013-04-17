@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import csv
 import os.path
 
@@ -11,14 +13,16 @@ def get_headers(filepath,determiter=','):
 
 def get_content_with_directory(filepath,determiter=','):
     header = get_headers(filepath,determiter)
-    result = {}
+    result = []
     with open(filepath,'rb') as csvfile:
         datas = csv.reader(csvfile)
         datas.next() #remove header
         for row in datas:
+            temp={}
             items = zip(header,row)
             for (name,value) in items:
-                result[name] = value
+                temp[name] = value
+            result.append(temp)
     return result
 
 if __name__ =="__main__":
