@@ -44,8 +44,8 @@ class Application(Frame):
         self.bt_addsecondincludecolumn.grid(row=3,column=1,columnspan=2,sticky=E)
         self.bt_addsecondincludecolumn.bind("<Button-1>",self.addincludecolumn)
     
-        self.list_firstincludecolumns = Listbox(self,width=30,exportselection=False)
-        self.list_secondincludecolumns = Listbox(self,width=30,exportselection=False)
+        self.list_firstincludecolumns = Listbox(self,width=30,exportselection=False,selectmode=MULTIPLE)
+        self.list_secondincludecolumns = Listbox(self,width=30,exportselection=False,selectmode=MULTIPLE)
 
         self.list_firstincludecolumns.grid( row=4,column=0,columnspan=2,sticky=W)
         self.list_secondincludecolumns.grid(row=4,column=1,columnspan=2,sticky=E)
@@ -77,7 +77,13 @@ class Application(Frame):
         print selectedIndexes
         if not selectedIndexes :
             return
-        sourcelist.delete(selectedIndexes[0])
+        print selectedIndexes
+        #将tuple转化为list
+        selectedIndexes=list(selectedIndexes)
+        #对索引排序，因为一次删除多个时，如果当前被删除项不是最后一项，ListBox中的索引会重新建立
+        selectedIndexes.sort(lambda x,y:-1)       
+        for index in selectedIndexes:
+            sourcelist.delete(index)
            
     def addincludecolumn(self,event):      
         if event.widget ==self.bt_addfirstincludecolumn:
