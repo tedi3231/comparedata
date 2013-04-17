@@ -25,8 +25,8 @@ class Application(Frame):
         
         self.bt_openfirstfile = Button(self,text="OPEN FILE")
         self.bt_opensecondfile = Button(self,text="OPEN FILE")
-        self.bt_openfirstfile.bind("<Button-1>",self.selectFile)
-        self.bt_opensecondfile.bind("<Button-1>",self.selectFile)
+        self.bt_openfirstfile.bind("<ButtonRelease-1>",self.selectFile)
+        self.bt_opensecondfile.bind("<ButtonRelease-1>",self.selectFile)
         self.bt_openfirstfile.grid(row=0, column=2,columnspan=2,sticky=W)
         self.bt_opensecondfile.grid(row=1, column=2,columnspan=2,sticky=W)
 
@@ -38,11 +38,11 @@ class Application(Frame):
         
         self.bt_addfirstincludecolumn = Button(self,width=29,text="添加需要导出的列")
         self.bt_addfirstincludecolumn.grid(row=3,column=0,columnspan=2,sticky=W)
-        self.bt_addfirstincludecolumn.bind("<Button-1>",self.addincludecolumn)
+        self.bt_addfirstincludecolumn.bind("<ButtonRelease-1>",self.addincludecolumn)
 
         self.bt_addsecondincludecolumn = Button(self,width=29,text="添加需要导出的列")
         self.bt_addsecondincludecolumn.grid(row=3,column=1,columnspan=2,sticky=E)
-        self.bt_addsecondincludecolumn.bind("<Button-1>",self.addincludecolumn)
+        self.bt_addsecondincludecolumn.bind("<ButtonRelease-1>",self.addincludecolumn)
     
         self.list_firstincludecolumns = Listbox(self,width=30,exportselection=False,selectmode=MULTIPLE)
         self.list_secondincludecolumns = Listbox(self,width=30,exportselection=False,selectmode=MULTIPLE)
@@ -53,19 +53,19 @@ class Application(Frame):
 
         self.bt_delfirstincludecolumn = Button(self,width=29,text="删除需要导出的列")
         self.bt_delfirstincludecolumn.grid(row=5,column=0,columnspan=2,sticky=W)
-        self.bt_delfirstincludecolumn.bind("<Button-1>",self.delincludecolumn)
+        self.bt_delfirstincludecolumn.bind("<ButtonRelease-1>",self.delincludecolumn)
 
         self.bt_delsecondincludecolumn = Button(self,width=29,text="删除需要导出的列")
         self.bt_delsecondincludecolumn.grid(row=5,column=1,columnspan=2,sticky=E)
-        self.bt_delsecondincludecolumn.bind("<Button-1>",self.delincludecolumn)
+        self.bt_delsecondincludecolumn.bind("<ButtonRelease-1>",self.delincludecolumn)
 
         self.bt_comparedata = Button(self,text="Start comparing data",fg="blue")
         self.bt_comparedata.grid(row=6,columnspan=4,sticky=S)
-        self.bt_comparedata.bind("<Button-1>",self.comparedata)
-        
+        self.bt_comparedata.bind("<ButtonRelease-1>",self.comparedata)
+
         self.pack()
 
-
+        
     def delincludecolumn(self,event):      
         if event.widget ==self.bt_delfirstincludecolumn:
             self.delselecteditem(self.list_firstincludecolumns )
