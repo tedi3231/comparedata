@@ -11,6 +11,28 @@ def thread_main(a):
         print threadname,x,count
         time.sleep(1)
 
+def addcount():
+    global count
+    while count<10:
+        count=count+1
+        time.sleep(1)
+
+def printcount():
+    global count
+    while count<10:
+        print count
+        time.sleep(2)
+
+def test():
+    global count
+    count = 1
+    add_thread = threading.Thread(target=addcount)
+    print_thread = threading.Thread(target=printcount)
+
+    add_thread.start()
+    print_thread.start()
+
+
 def main(num):
     global count,mutex
     threads = []
@@ -22,7 +44,10 @@ def main(num):
         t.start()
     for t in threads:
         t.join()
+    while count<1000:
+        print "current count =%s" % count
 
 if __name__ =="__main__":
-    num =4 
-    main(4)
+    #num =4 
+    #main(4)
+    test()

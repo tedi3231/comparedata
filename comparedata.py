@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import dealcsv
 
+hasproc_count = 0 
+totalcount =  0
+
 def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,secondincludecolumns=None):
     """
     compare two directory with special keys
@@ -9,6 +12,10 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
     @columns list ,special key names 
     @includecolumns should include in result ,like [('b'),('b')]
     """
+    global totalcount
+    global hasproc_count
+    totalcount = len(data1) * len(data2)
+    print "comparedata.totalcount=%s"%totalcount
     if (not firstcolumns or len(firstcolumns)<=0) or (not secondcolumns or len(secondcolumns)<=0) :
         raise Exception("please special comparing columns")
     firstcolumn =  firstcolumns[0]
@@ -31,6 +38,10 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
             if result_row:
                 result.append(result_row)
                 break
+        #import time 
+        #time.sleep(1)
+        hasproc_count = hasproc_count + len(data2)
+        print "comparedata.hasproc_count=%s"%hasproc_count
     return result
 
 def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumns=None,secondincludecolumns=None):

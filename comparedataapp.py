@@ -10,6 +10,7 @@ import threading
 
 ALLOWFILETYPES =[("CSV File","*.csv"),("Excel File","*.xls")]
 
+
 class Application(Frame):
     def __init__(self,master):
         Frame.__init__(self,master)
@@ -138,17 +139,13 @@ class Application(Frame):
         for item in headercolumns:
             self.list_secondfilecolumns.insert(0,item)
         
-    def startthread(self):
-        for i in range(0,100,10):
-            self.progressbar.step(10)
-            import time
-            time.sleep(1)
-        
+
 
     def comparedata(self,event):
-        
-        thread = threading.Thread(target=self.startthread)
-        thread.start()
+        #init thread argument
+        self.progressbar['value']=0
+        comparedata.hasproc_count = 0
+        comparedata.totalcount=0
 
         firstfile = self.txt_firstfilename.get()
         secondfile = self.txt_secondfilename.get()
@@ -188,14 +185,44 @@ class Application(Frame):
         print firstincludecolumns
         print secondincludecolumns
         #print columns
+        
+        #result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
+        #                                list(firstincludecolumns),list(secondincludecolumns))
+        comparethread = threading.Thread(target=self.startcomparedatathread,args=[firstfile,secondfile,firstcolumns,secondcolumns,
+                                                      firstincludecolumns,secondincludecolumns]) 
+        comparethread.start()
+        import time
+        time.sleep(2)
+        thread = threading.Thread(target=self.startprogressbarthread)
+        thread.start()
+
+
+
+    def startcomparedatathread(self,firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolumns,secondincludecolumns):
         import datetime
         print datetime.datetime.now()
-        result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],list(firstincludecolumns),list(secondincludecolumns))
+        result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
+                                        list(firstincludecolumns),list(secondincludecolumns))
+
         if dealcsv.write_dict_to_csv(result,'result.csv'):
             tkMessageBox.showinfo(title="生成成功",message="文件生成成功，请查看当前目录下的result.csv文件")
         else:
             tkMessageBox.showerror(title="生成失败",message="没有匹配的记录")
         print datetime.datetime.now()
+
+    def startprogressbarthread(self):
+        print "thread.totalcount=%s,thread.hasproc_count=%s"%(comparedata.totalcount,comparedata.hasproc_count)
+        complete_percent =10 # int(float(comparedata.hasproc_count)/comparedata.totalcount*100)
+        #print "complete_percent=%s"%complete_percent
+        #while comparedata.hasproc_count<comparedata.totalcount:
+        while complete_percent<100:
+            complete_percent = int(float(comparedata.hasproc_count)/comparedata.totalcount*100)
+            print "complete_percent=%s"%complete_percent
+            #self.progressbar.step(complete_percent)
+            self.progressbar["value"] = complete_percent
+            import time
+            time.sleep(1)
+
 
 if __name__ == "__main__":
     master = Tk()
