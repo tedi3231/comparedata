@@ -6,6 +6,7 @@ import os.path
 import dealcsv
 import ttk
 import comparedata
+import threading
 
 ALLOWFILETYPES =[("CSV File","*.csv"),("Excel File","*.xls")]
 
@@ -59,8 +60,11 @@ class Application(Frame):
         self.bt_delsecondincludecolumn.grid(row=5,column=1,columnspan=2,sticky=E)
         self.bt_delsecondincludecolumn.bind("<ButtonRelease-1>",self.delincludecolumn)
 
+        self.progressbar = ttk.Progressbar(self,length=500,mode="determinate")
+        self.progressbar.grid(row=6,columnspan=6,sticky=W+S+N+E)
+
         self.bt_comparedata = Button(self,text="Start comparing data",fg="blue")
-        self.bt_comparedata.grid(row=6,columnspan=4,sticky=S)
+        self.bt_comparedata.grid(row=7,columnspan=4,sticky=S)
         self.bt_comparedata.bind("<ButtonRelease-1>",self.comparedata)
 
         self.pack()
@@ -133,8 +137,19 @@ class Application(Frame):
         headercolumns = dealcsv.get_headers(filename)
         for item in headercolumns:
             self.list_secondfilecolumns.insert(0,item)
+        
+    def startthread(self):
+        for i in range(0,100,10):
+            self.progressbar.step(10)
+            import time
+            time.sleep(1)
+        
 
     def comparedata(self,event):
+        
+        thread = threading.Thread(target=self.startthread)
+        thread.start()
+
         firstfile = self.txt_firstfilename.get()
         secondfile = self.txt_secondfilename.get()
 
