@@ -67,6 +67,9 @@ class Application(Frame):
         self.bt_comparedata = Button(self,text="Start comparing data",fg="blue")
         self.bt_comparedata.grid(row=7,columnspan=4,sticky=S)
         self.bt_comparedata.bind("<ButtonRelease-1>",self.comparedata)
+        
+        self.msg_result = Message(self,text="msg result",fg="red",width=500)
+        self.msg_result.grid(row=8,columnspan=6)
 
         self.pack()
 
@@ -208,9 +211,11 @@ class Application(Frame):
                                         list(firstincludecolumns),list(secondincludecolumns))
 
         if dealcsv.write_dict_to_csv(result,'result.csv'):
-            tkMessageBox.showinfo(title="生成成功",message="文件生成成功，请查看当前目录下的result.csv文件")
+            self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
+            #tkMessageBox.showinfo(title="生成成功",message="文件生成成功，请查看当前目录下的result.csv文件")
         else:
-            tkMessageBox.showerror(title="生成失败",message="没有匹配的记录")
+            self.msg_result["text"] = "文件生成失败"
+            #tkMessageBox.showerror(title="生成失败",message="没有匹配的记录")
         print datetime.datetime.now()
 
     def startprogressbarthread(self):
@@ -221,10 +226,14 @@ class Application(Frame):
         while complete_percent<100:
             complete_percent = int(float(comparedata.hasproc_count)/comparedata.totalcount*100)
             print "complete_percent=%s"%complete_percent
+            self.msg_result["text"] = "当前任务的处理进度%s%%" % complete_percent
             #self.progressbar.step(complete_percent)
             self.progressbar["value"] = complete_percent
-            import time
-            time.sleep(1)
+            if complete_percent<100:
+                import time
+                time.sleep(1)
+            else:
+                self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
 
 
 if __name__ == "__main__":
