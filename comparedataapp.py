@@ -121,6 +121,8 @@ class Application(Frame):
     def selectfirstfile(self,filename):
         self.txt_firstfilename.delete(0,END)
         self.list_firstfilecolumns.delete(0,END)
+        self.list_firstincludecolumns.delete(0,END)
+
         self.txt_firstfilename.insert(0,filename)
         headercolumns = dealcsv.get_headers(filename)
         for item in headercolumns:
@@ -133,6 +135,7 @@ class Application(Frame):
     def selectsecondfile(self,filename):
         self.txt_secondfilename.delete(0,END)
         self.list_secondfilecolumns.delete(0,END)
+        self.list_secondincludecolumns.delete(0,END)
         self.txt_secondfilename.insert(0,filename)
 
         headercolumns = dealcsv.get_headers(filename)
