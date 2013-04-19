@@ -69,13 +69,13 @@ class Application(Frame):
         self.ck_ratio.grid(row=7,column=0,sticky=W)
 
         #self.lb_ratio_val = Label(self,text="最小相似度")
-        #self.lb_ratio_val.grid(row=7,column=1,sticky=W)
+        #self.lb_ratio_val.grid(row=7,column=1,sticky=W+E)
 
-        self.txt_ratio_val = Entry(self,width=10)
+        self.txt_ratio_val = Entry(self,width=10,text="最小相似度")
         self.txt_ratio_val.grid(row=7,column=1,sticky=W)
-
-        self.bt_comparedata = Button(self,text="Start comparing data",fg="blue")
-        self.bt_comparedata.grid(row=7,column=2,columnspan=4,sticky=W)
+        self.txt_ratio_val.insert(END,"最小相似度")
+        self.bt_comparedata = Button(self,text="Start comparing...",fg="blue")
+        self.bt_comparedata.grid(row=7,column=2,columnspan=4,sticky=E)
         self.bt_comparedata.bind("<ButtonRelease-1>",self.comparedata)
         
         self.msg_result = Message(self,text="msg result",fg="red",width=500)
@@ -249,5 +249,6 @@ class Application(Frame):
 
 if __name__ == "__main__":
     master = Tk()
+    master.title("Compare data tool version 0.1")
     app = Application(master)
     app.mainloop()
