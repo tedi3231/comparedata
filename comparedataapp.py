@@ -7,6 +7,8 @@ import dealcsv
 import ttk
 import comparedata
 import threading
+import datetime
+import time
 
 ALLOWFILETYPES =[("CSV File","*.csv"),("Excel File","*.xls")]
 
@@ -65,7 +67,8 @@ class Application(Frame):
         self.progressbar = ttk.Progressbar(self,length=300,mode="determinate")
         self.progressbar.grid(row=6,columnspan=6,sticky=W+S+N+E)
 
-        self.ck_ratio = Checkbutton(self,text="相似比较")
+        self.ck_ratio_var = IntVar()
+        self.ck_ratio = Checkbutton(self,text="相似比较",variable=self.ck_ratio_var,command=self.ck_state_changed)
         self.ck_ratio.grid(row=7,column=0,sticky=W)
 
         #self.lb_ratio_val = Label(self,text="最小相似度")
@@ -84,7 +87,19 @@ class Application(Frame):
         print self.grid_size()
         self.pack()
 
-        
+
+    def ck_state_changed(self):
+        """
+        when ck_ratio's value changed execute this method 
+        """
+        if self.ck_ratio_var.get() == 1:
+            self.txt_ratio_val.delete(0,END)
+            self.txt_ratio_val["state"] = NORMAL
+        else:
+            self.txt_ratio_val["state"] = DISABLED
+            self.txt_ratio_val["text"] = "最小相似度"
+
+
     def delincludecolumn(self,event):      
         if event.widget ==self.bt_delfirstincludecolumn:
             self.delselecteditem(self.list_firstincludecolumns )
@@ -190,44 +205,37 @@ class Application(Frame):
         if not second_selected_columns:
             tkMessageBox.showerror(title="Error",message="Second file no column selected")
             return
-        print first_selected_columns
-        print second_selected_columns
-        #compare columns
+        
         firstcolumns = self.list_firstfilecolumns.get(first_selected_columns[0])
         secondcolumns = self.list_secondfilecolumns.get(second_selected_columns[0])
-
-        #include columns
+        
         firstincludecolumns = self.list_firstincludecolumns.get(0,END)
         secondincludecolumns = self.list_secondincludecolumns.get(0,END)
-        print firstincludecolumns
-        print secondincludecolumns
-        #print columns
         
         #result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
         #                                list(firstincludecolumns),list(secondincludecolumns))
-        comparethread = threading.Thread(target=self.startcomparedatathread,args=[firstfile,secondfile,firstcolumns,secondcolumns,
-                                                      firstincludecolumns,secondincludecolumns]) 
+        comparethread = threading.Thread(target=self.startcomparedatathread,args=(firstfile,secondfile,firstcolumns,
+                                                secondcolumns,firstincludecolumns,secondincludecolumns,
+                                                self.ck_ratio_var.get(),self.txt_ratio_val.get(),))
         comparethread.start()
-        import time
+
         time.sleep(2)
         thread = threading.Thread(target=self.startprogressbarthread)
         thread.start()
 
 
-
-    def startcomparedatathread(self,firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolumns,secondincludecolumns):
-        import datetime
-        print datetime.datetime.now()
+    
+    def startcomparedatathread(self,firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolumns,
+                               secondincludecolumns,needratio,mini_ratio_percent):
+        #print "call startprogressbarthread time %s" % datetime.datetime.now()
         result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
-                                        list(firstincludecolumns),list(secondincludecolumns))
-
+                                        list(firstincludecolumns),list(secondincludecolumns),
+                                         needratio,mini_ratio_percent)
         if dealcsv.write_dict_to_csv(result,'result.csv'):
             self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
-            #tkMessageBox.showinfo(title="生成成功",message="文件生成成功，请查看当前目录下的result.csv文件")
         else:
             self.msg_result["text"] = "文件生成失败"
-            #tkMessageBox.showerror(title="生成失败",message="没有匹配的记录")
-        print datetime.datetime.now()
+    
 
     def startprogressbarthread(self):
         print "thread.totalcount=%s,thread.hasproc_count=%s"%(comparedata.totalcount,comparedata.hasproc_count)
