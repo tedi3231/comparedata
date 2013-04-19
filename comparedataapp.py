@@ -13,64 +13,75 @@ ALLOWFILETYPES =[("CSV File","*.csv"),("Excel File","*.xls")]
 
 class Application(Frame):
     def __init__(self,master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bd=1)
+        self['width']=800
         
         self.lb_chooseFirstFile = Label(self,text="Choose File")
         self.lb_chooseSecondFile = Label(self,text="Choose File")
-        self.lb_chooseFirstFile.grid(row=0,column=0,sticky=W)
-        self.lb_chooseSecondFile.grid(row=1,column=0,sticky=W)        
+        self.lb_chooseFirstFile.grid(row=0,column=0,columnspan=2,sticky=W)
+        self.lb_chooseSecondFile.grid(row=1,column=0,columnspan=2,sticky=W)        
         
-        self.txt_firstfilename = Entry(self,width=50)
-        self.txt_secondfilename = Entry(self,width=50)
-        self.txt_firstfilename.grid(row=0,column=1)
-        self.txt_secondfilename.grid(row=1,column=1)
+        self.txt_firstfilename = Entry(self,width=30)
+        self.txt_secondfilename = Entry(self,width=30)
+        self.txt_firstfilename.grid(row=0,column=1,columnspan=2,sticky=W)
+        self.txt_secondfilename.grid(row=1,column=1,columnspan=2,sticky=W)
         
         self.bt_openfirstfile = Button(self,text="OPEN FILE")
         self.bt_opensecondfile = Button(self,text="OPEN FILE")
         self.bt_openfirstfile.bind("<ButtonRelease-1>",self.selectFile)
         self.bt_opensecondfile.bind("<ButtonRelease-1>",self.selectFile)
-        self.bt_openfirstfile.grid(row=0, column=2,columnspan=2,sticky=W)
-        self.bt_opensecondfile.grid(row=1, column=2,columnspan=2,sticky=W)
+        self.bt_openfirstfile.grid(row=0, column=2,columnspan=2,sticky=E)
+        self.bt_opensecondfile.grid(row=1, column=2,columnspan=2, sticky=E)
 
-        self.list_firstfilecolumns = Listbox(self,width=30,exportselection=False)
-        self.list_secondfilecolumns = Listbox(self,width=30,exportselection=False)
+        self.list_firstfilecolumns = Listbox(self,exportselection=False)
+        self.list_secondfilecolumns = Listbox(self,exportselection=False)
 
-        self.list_firstfilecolumns.grid( row=2,column=0,columnspan=2,sticky=W)
-        self.list_secondfilecolumns.grid(row=2,column=1,columnspan=2,sticky=E)
+        self.list_firstfilecolumns.grid( row=2,column=0,columnspan=3,sticky=W)
+        self.list_secondfilecolumns.grid(row=2,column=1,columnspan=3,sticky=E)
         
-        self.bt_addfirstincludecolumn = Button(self,width=29,text="添加需要导出的列")
-        self.bt_addfirstincludecolumn.grid(row=3,column=0,columnspan=2,sticky=W)
+        self.bt_addfirstincludecolumn = Button(self,text="添加需要导出的列")
+        self.bt_addfirstincludecolumn.grid(row=3,column=0,columnspan=3,sticky=W)
         self.bt_addfirstincludecolumn.bind("<ButtonRelease-1>",self.addincludecolumn)
 
-        self.bt_addsecondincludecolumn = Button(self,width=29,text="添加需要导出的列")
-        self.bt_addsecondincludecolumn.grid(row=3,column=1,columnspan=2,sticky=E)
+        self.bt_addsecondincludecolumn = Button(self,text="添加需要导出的列")
+        self.bt_addsecondincludecolumn.grid(row=3,column=1,columnspan=3,sticky=E)
         self.bt_addsecondincludecolumn.bind("<ButtonRelease-1>",self.addincludecolumn)
     
-        self.list_firstincludecolumns = Listbox(self,width=30,exportselection=False,selectmode=MULTIPLE)
-        self.list_secondincludecolumns = Listbox(self,width=30,exportselection=False,selectmode=MULTIPLE)
+        self.list_firstincludecolumns = Listbox(self,exportselection=False,selectmode=MULTIPLE)
+        self.list_secondincludecolumns = Listbox(self,exportselection=False,selectmode=MULTIPLE)
 
-        self.list_firstincludecolumns.grid( row=4,column=0,columnspan=2,sticky=W)
-        self.list_secondincludecolumns.grid(row=4,column=1,columnspan=2,sticky=E)
+        self.list_firstincludecolumns.grid( row=4,column=0,columnspan=3,sticky=W)
+        self.list_secondincludecolumns.grid(row=4,column=1,columnspan=3,sticky=E)
 
 
-        self.bt_delfirstincludecolumn = Button(self,width=29,text="删除需要导出的列")
-        self.bt_delfirstincludecolumn.grid(row=5,column=0,columnspan=2,sticky=W)
+        self.bt_delfirstincludecolumn = Button(self,text="删除需要导出的列")
+        self.bt_delfirstincludecolumn.grid(row=5,column=0,columnspan=3,sticky=W)
         self.bt_delfirstincludecolumn.bind("<ButtonRelease-1>",self.delincludecolumn)
 
-        self.bt_delsecondincludecolumn = Button(self,width=29,text="删除需要导出的列")
-        self.bt_delsecondincludecolumn.grid(row=5,column=1,columnspan=2,sticky=E)
+        self.bt_delsecondincludecolumn = Button(self,text="删除需要导出的列")
+        self.bt_delsecondincludecolumn.grid(row=5,column=1,columnspan=3,sticky=E)
         self.bt_delsecondincludecolumn.bind("<ButtonRelease-1>",self.delincludecolumn)
 
-        self.progressbar = ttk.Progressbar(self,length=500,mode="determinate")
+        self.progressbar = ttk.Progressbar(self,length=300,mode="determinate")
         self.progressbar.grid(row=6,columnspan=6,sticky=W+S+N+E)
 
+        self.ck_ratio = Checkbutton(self,text="相似比较")
+        self.ck_ratio.grid(row=7,column=0,sticky=W)
+
+        #self.lb_ratio_val = Label(self,text="最小相似度")
+        #self.lb_ratio_val.grid(row=7,column=1,sticky=W)
+
+        self.txt_ratio_val = Entry(self,width=10)
+        self.txt_ratio_val.grid(row=7,column=1,sticky=W)
+
         self.bt_comparedata = Button(self,text="Start comparing data",fg="blue")
-        self.bt_comparedata.grid(row=7,columnspan=4,sticky=S)
+        self.bt_comparedata.grid(row=7,column=2,columnspan=4,sticky=W)
         self.bt_comparedata.bind("<ButtonRelease-1>",self.comparedata)
         
         self.msg_result = Message(self,text="msg result",fg="red",width=500)
         self.msg_result.grid(row=8,columnspan=6)
 
+        print self.grid_size()
         self.pack()
 
         

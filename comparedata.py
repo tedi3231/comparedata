@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import dealcsv
+import difflib
 
 hasproc_count = 0 
 totalcount =  0
@@ -20,8 +21,6 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
         raise Exception("please special comparing columns")
     firstcolumn =  firstcolumns[0]
     secondcolumn = secondcolumns[0]
-    #print firstcolumn
-    #print secondcolumn
     
     if not data1[0].has_key(firstcolumn):
         raise Exception("data1don't have special column %s"%firstcolumn)
@@ -38,11 +37,10 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
             if result_row:
                 result.append(result_row)
                 break
-        #import time 
-        #time.sleep(1)
         hasproc_count = hasproc_count + len(data2)
         print "comparedata.hasproc_count=%s"%hasproc_count
     return result
+
 
 def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumns=None,secondincludecolumns=None):
     """
@@ -58,11 +56,16 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
     secondval = secondval and secondval.strip()
 	
     if not firstval or not secondval:
-		return None
+	return None
 		
     if firstval<> secondval:
         return None
 
+    s = difflib.SequenceMatcher(None,firstval,secondval) 
+    s_ratio = s.ratio()
+    if s_ratio<1.0:
+        print "%s and %s similar = %s" % str(s_ratio)
+        return None 
     result = {}
     result['data1_%s'%firstcolumn] = firstval
 
@@ -76,6 +79,7 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
         for item in secondincludecolumns:
             result['data2_%s'%item] = second_row[item]
     return result
+
 
 def comparecsv(firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolumns=None,secondincludecolumns=None,determiter=','):
     """

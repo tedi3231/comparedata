@@ -18,7 +18,7 @@ class Application(Frame):
         self.pb1.grid(row=0,column=0)
         self.bt_start.grid(row=1,column=0)
         
-        self.pack()
+        self.pack(expand=True)
     
     def start_thread(self):
         #count = 100
