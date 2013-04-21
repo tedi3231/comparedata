@@ -5,6 +5,9 @@ import difflib
 hasproc_count = 0 
 totalcount =  0
 
+#需要过滤掉的字符内容
+filtercontent = ()
+
 def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,secondincludecolumns=None,needratio=0,mini_ratio_percent=1.0):
     """
     compare two directory with special keys
@@ -21,6 +24,7 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
         raise Exception("please special comparing columns")
     firstcolumn =  firstcolumns[0]
     secondcolumn = secondcolumns[0]
+   
     
     if not data1[0].has_key(firstcolumn):
         raise Exception("data1don't have special column %s"%firstcolumn)
@@ -58,6 +62,16 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
     if not firstval or not secondval:
 	return None
     
+    global filtercontent
+    print  filtercontent
+
+    if filtercontent:
+        for field in filtercontent:
+            if field in firstval:
+                firstval = firstval.replace(field,"")
+            if field in secondval:
+                secondval = secondval.replace(field,"")
+
     compare_result = False
     s_ratio = 0
     if needratio:
@@ -112,8 +126,18 @@ def comparecsv(firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolum
     return comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns,secondincludecolumns,needratio=needratio,
                        mini_ratio_percent=mini_ratio_percent)
 
+
+#from filter.csv loading filter fields 
+import os
+if os.path.exists("filter.csv"):
+    with open("filter.csv","rb") as csvfile:
+        #global filtercontent
+        filtercontent = tuple(csvfile.readlines())
+        
 if __name__ =="__main__":
-    d1 = [{'a':1,'b':2},{'a':23,'b':45}]
-    d2 = [{'a':1,'b':23},{'a':4,'b':45},{'a':23,'b':45}]
+    d1 = [{'a':"123",'b':2},{'a':23,'b':45}]
+    d2 = [{'a':"13",'b':23},{'a':4,'b':45},{'a':23,'b':45}]
+    #filtercontent = ('2',)
+    print filtercontent
     result = comparedata(d1,d2,['a'],['a'],['b'],['b'],needratio=1,mini_ratio_percent=0.8)
     print result

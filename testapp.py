@@ -11,6 +11,7 @@ import threading
 class Application(Frame):
     def __init__(self,master):
         Frame.__init__(self,master)
+
         self.pb1 = ttk.Progressbar(self,length=100,mode="determinate",name="pb1")
         pb2 = ttk.Progressbar(self,mode="indeterminate",name="pb2")
         #start = ttk.Button(text="Start",command = lambda:self._do_start())
@@ -46,5 +47,11 @@ class Application(Frame):
 if __name__ == "__main__":
     master = Tk()
     app = Application(master)
+    menu = Menu(app)
+    master.config(menu=menu)
+    filemenu = Menu(menu)
+    menu.add_cascade(label="File",menu=filemenu)
+    filemenu.add_command(label="New")
     app.mainloop()
+
         

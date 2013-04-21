@@ -255,8 +255,35 @@ class Application(Frame):
                 self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
 
 
+def show_upload_filter():
+    filename = tkFileDialog.askopenfilename(title="Please choose a file",filetypes=[("CSV File","*.csv")])
+    print 'upload file %s' % filename
+    import os
+    if os.name == "nt":
+        os.system("copy %s %s" %(filename,"filter.csv"))
+    else:
+        os.system("cp %s %s"%(filename,"filter.csv"))
+    tkMessageBox.showinfo(title="Success",message="Upload filter file successful")
+
+
+def show_about_dialog():
+    tkMessageBox.showinfo(title="About",message="Wedo compare data tools version 0.1")
+
+
+def setmenu(master):
+    menubar = Menu(master)
+    master.config(menu=menubar)
+
+    #add menuitem
+    filemenu = Menu(menubar)
+    menubar.add_cascade(label="File", menu=filemenu)
+    filemenu.add_command(label="Upload Filter",command=show_upload_filter)
+    filemenu.add_command(label="About",command=show_about_dialog)
+
+
 if __name__ == "__main__":
     master = Tk()
+    setmenu(master)
     master.title("Compare data tool version 0.1")
     app = Application(master)
     app.mainloop()
