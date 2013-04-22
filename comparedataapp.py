@@ -35,8 +35,8 @@ class Application(Frame):
         self.bt_openfirstfile.grid(row=0, column=2,columnspan=2,sticky=E)
         self.bt_opensecondfile.grid(row=1, column=2,columnspan=2, sticky=E)
 
-        self.list_firstfilecolumns = Listbox(self,exportselection=False)
-        self.list_secondfilecolumns = Listbox(self,exportselection=False)
+        self.list_firstfilecolumns = Listbox(self,exportselection=False,height=6)
+        self.list_secondfilecolumns = Listbox(self,exportselection=False,height=6)
 
         self.list_firstfilecolumns.grid( row=2,column=0,columnspan=3,sticky=W)
         self.list_secondfilecolumns.grid(row=2,column=1,columnspan=3,sticky=E)
@@ -49,8 +49,8 @@ class Application(Frame):
         self.bt_addsecondincludecolumn.grid(row=3,column=1,columnspan=3,sticky=E)
         self.bt_addsecondincludecolumn.bind("<ButtonRelease-1>",self.addincludecolumn)
     
-        self.list_firstincludecolumns = Listbox(self,exportselection=False,selectmode=MULTIPLE)
-        self.list_secondincludecolumns = Listbox(self,exportselection=False,selectmode=MULTIPLE)
+        self.list_firstincludecolumns = Listbox(self,exportselection=False,selectmode=MULTIPLE,height=6)
+        self.list_secondincludecolumns = Listbox(self,exportselection=False,selectmode=MULTIPLE,height=6)
 
         self.list_firstincludecolumns.grid( row=4,column=0,columnspan=3,sticky=W)
         self.list_secondincludecolumns.grid(row=4,column=1,columnspan=3,sticky=E)
