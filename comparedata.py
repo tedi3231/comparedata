@@ -7,6 +7,7 @@ totalcount =  0
 
 #需要过滤掉的字符内容
 filtercontent = ()
+need_filtercontent=False
 
 def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,secondincludecolumns=None,needratio=0,mini_ratio_percent=1.0):
     """
@@ -25,7 +26,6 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
     firstcolumn =  firstcolumns[0]
     secondcolumn = secondcolumns[0]
    
-    
     if not data1[0].has_key(firstcolumn):
         raise Exception("data1don't have special column %s"%firstcolumn)
     #print data2
@@ -63,9 +63,9 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
 	return None
     
     global filtercontent
-    print  filtercontent
+    global need_filtercontent  
 
-    if filtercontent:
+    if need_filtercontent and filtercontent:
         for field in filtercontent:
             if field in firstval:
                 firstval = firstval.replace(field,"")
@@ -78,8 +78,6 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
         s = difflib.SequenceMatcher(None,firstval,secondval) 
         s_ratio = s.ratio()
         if s_ratio<mini_ratio_percent:
-            #print "%s and %s similar = %s" % str(s_ratio)
-            #return None
             compare_result = False
         else:
             compare_result = True
@@ -121,6 +119,7 @@ def comparecsv(firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolum
     @includecolumns should be included in result
     @reutrn [{},{}]
     """
+    print "need_filtercontent=%s" % need_filtercontent
     data1 = dealcsv.get_content_with_directory(firstfile,determiter)
     data2 = dealcsv.get_content_with_directory(secondfile,determiter)
     return comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns,secondincludecolumns,needratio=needratio,

@@ -56,7 +56,6 @@ class Application(Frame):
         self.list_firstincludecolumns.grid( row=4,column=0,columnspan=3,sticky=W)
         self.list_secondincludecolumns.grid(row=4,column=1,columnspan=3,sticky=E)
 
-
         self.bt_delfirstincludecolumn = Button(self,text="删除需要导出的列")
         self.bt_delfirstincludecolumn.grid(row=5,column=0,columnspan=3,sticky=W)
         self.bt_delfirstincludecolumn.bind("<ButtonRelease-1>",self.delincludecolumn)
@@ -72,7 +71,7 @@ class Application(Frame):
         #self.ck_filter_fields.grid(row=7,column=2,sticky=W)
         
         self.ck_filter_var = IntVar()
-        self.ck_filter = Checkbutton(self,text="过滤",variable=self.ck_filter_var,command=self.ck_state_changed)
+        self.ck_filter = Checkbutton(self,text="过滤",variable=self.ck_filter_var,command=self.ck_filter_changed)
         self.ck_filter.grid(row=7,column=0,sticky=W)
         
         self.ck_ratio_var = IntVar()
@@ -95,6 +94,15 @@ class Application(Frame):
 
         self.pack(side=LEFT)
 
+    
+    def ck_filter_changed(self):
+        """
+        when ck_ratio's value checked,we use filter fileds
+        """
+        if self.ck_filter_var.get() == 1:
+            comparedata.need_filtercontent=True
+        else:
+            comparedata.need_filtercontent=False 
 
     def ck_state_changed(self):
         """
@@ -106,7 +114,7 @@ class Application(Frame):
         else:
             self.txt_ratio_val["state"] = DISABLED
             self.txt_ratio_val["text"] = "最小相似度"
-
+            
 
     def delincludecolumn(self,event):      
         if event.widget ==self.bt_delfirstincludecolumn:
