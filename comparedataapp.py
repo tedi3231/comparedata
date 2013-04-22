@@ -257,10 +257,13 @@ class Application(Frame):
 
 def show_upload_filter():
     filename = tkFileDialog.askopenfilename(title="Please choose a file",filetypes=[("CSV File","*.csv")])
-    print 'upload file %s' % filename
+    print 'upload file "%s"' % filename
     import os
-    if os.name == "nt":
-        os.system("copy %s %s" %(filename,"filter.csv"))
+    if os.name == "nt":        
+        if "/" in filename:
+            filename = filename.replace("/","\\\\")
+        print "nt filename %s" % filename    
+        os.system(u'copy "%s" "%s"' %(filename,"filter.csv"))
     else:
         os.system("cp %s %s"%(filename,"filter.csv"))
     tkMessageBox.showinfo(title="Success",message="Upload filter file successful")
