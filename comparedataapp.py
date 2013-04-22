@@ -231,6 +231,7 @@ class Application(Frame):
         
         #result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
         #                                list(firstincludecolumns),list(secondincludecolumns))
+        print "self.ck_ratio_var.get()=%s"%self.ck_ratio_var.get()
         comparethread = threading.Thread(target=self.startcomparedatathread,args=(firstfile,secondfile,firstcolumns,
                                                 secondcolumns,firstincludecolumns,secondincludecolumns,
                                                 self.ck_ratio_var.get(),self.txt_ratio_val.get(),))
@@ -246,7 +247,7 @@ class Application(Frame):
         #print "call startprogressbarthread time %s" % datetime.datetime.now()
         result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
                                         list(firstincludecolumns),list(secondincludecolumns),
-                                         needratio,mini_ratio_percent)
+                                         needratio=needratio,mini_ratio_percent=float(mini_ratio_percent))
         if dealcsv.write_dict_to_csv(result,'result.csv'):
             self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
         else:

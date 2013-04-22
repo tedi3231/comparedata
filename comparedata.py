@@ -20,7 +20,6 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
     global totalcount
     global hasproc_count
     totalcount = len(data1) * len(data2)
-    print "comparedata.totalcount=%s"%totalcount
     if (not firstcolumns or len(firstcolumns)<=0) or (not secondcolumns or len(secondcolumns)<=0) :
         raise Exception("please special comparing columns")
     firstcolumn =  firstcolumns[0]
@@ -37,7 +36,7 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
     for first_row in data1:
         firstval = first_row[firstcolumn]
         for second_row in data2:
-            result_row = _createrow(first_row,second_row,firstcolumn,secondcolumn,firstincludecolumns,secondincludecolumns,needratio,mini_ratio_percent)
+            result_row = _createrow(first_row,second_row,firstcolumn,secondcolumn,firstincludecolumns,secondincludecolumns,needratio=needratio,mini_ratio_percent=mini_ratio_percent)
             if result_row:
                 result.append(result_row)
                 break
@@ -65,7 +64,6 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
     global filtercontent
     global need_filtercontent  
     
-    print "need_filtercontent=%s" % need_filtercontent
     if need_filtercontent and filtercontent:
         for field in filtercontent:
             if field in firstval:
@@ -75,6 +73,7 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
 
     compare_result = False
     s_ratio = 0
+
     if needratio:
         s = difflib.SequenceMatcher(None,firstval,secondval) 
         s_ratio = s.ratio()
@@ -120,7 +119,7 @@ def comparecsv(firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolum
     @includecolumns should be included in result
     @reutrn [{},{}]
     """
-    
+
     data1 = dealcsv.get_content_with_directory(firstfile,determiter)
     data2 = dealcsv.get_content_with_directory(secondfile,determiter)
     return comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns,secondincludecolumns,needratio=needratio,
