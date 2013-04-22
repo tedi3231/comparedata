@@ -2,6 +2,7 @@
 from Tkinter import *
 import tkMessageBox
 import tkFileDialog
+import os
 import os.path
 import dealcsv
 import ttk
@@ -169,10 +170,9 @@ class Application(Frame):
 
         headercolumns = dealcsv.get_headers(filename)
         for item in headercolumns:
-            self.list_secondfilecolumns.insert(0,item)
-        
+            self.list_secondfilecolumns.insert(0,item)     
 
-
+            
     def comparedata(self,event):
         #init thread argument
         self.progressbar['value']=0
@@ -257,8 +257,9 @@ class Application(Frame):
 
 def show_upload_filter():
     filename = tkFileDialog.askopenfilename(title="Please choose a file",filetypes=[("CSV File","*.csv")])
+    if not filename:
+        return
     print 'upload file "%s"' % filename
-    import os
     if os.name == "nt":        
         if "/" in filename:
             filename = filename.replace("/","\\\\")
@@ -268,7 +269,7 @@ def show_upload_filter():
         os.system("cp %s %s"%(filename,"filter.csv"))
     tkMessageBox.showinfo(title="Success",message="Upload filter file successful")
 
-
+    
 def show_about_dialog():
     tkMessageBox.showinfo(title="About",message="Wedo compare data tools version 0.1")
 
