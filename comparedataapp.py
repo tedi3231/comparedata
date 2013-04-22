@@ -19,8 +19,8 @@ class Application(Frame):
         Frame.__init__(self,master,bd=1)
         self['width']=800
         
-        self.lb_chooseFirstFile = Label(self,text="Choose File")
-        self.lb_chooseSecondFile = Label(self,text="Choose File")
+        self.lb_chooseFirstFile = Label(self,text="File1")
+        self.lb_chooseSecondFile = Label(self,text="File2")
         self.lb_chooseFirstFile.grid(row=0,column=0,columnspan=2,sticky=W)
         self.lb_chooseSecondFile.grid(row=1,column=0,columnspan=2,sticky=W)        
         
@@ -29,8 +29,8 @@ class Application(Frame):
         self.txt_firstfilename.grid(row=0,column=1,columnspan=2,sticky=W)
         self.txt_secondfilename.grid(row=1,column=1,columnspan=2,sticky=W)
         
-        self.bt_openfirstfile = Button(self,text="OPEN FILE")
-        self.bt_opensecondfile = Button(self,text="OPEN FILE")
+        self.bt_openfirstfile = Button(self,text="Choose..")
+        self.bt_opensecondfile = Button(self,text="Choose..")
         self.bt_openfirstfile.bind("<ButtonRelease-1>",self.selectFile)
         self.bt_opensecondfile.bind("<ButtonRelease-1>",self.selectFile)
         self.bt_openfirstfile.grid(row=0, column=2,columnspan=2,sticky=E)
@@ -68,25 +68,32 @@ class Application(Frame):
         self.progressbar = ttk.Progressbar(self,length=300,mode="determinate")
         self.progressbar.grid(row=6,columnspan=6,sticky=W+S+N+E)
 
+        #self.ck_filter_fields = Checkbutton(self,text="过滤关键字")
+        #self.ck_filter_fields.grid(row=7,column=2,sticky=W)
+        
+        self.ck_filter_var = IntVar()
+        self.ck_filter = Checkbutton(self,text="过滤",variable=self.ck_filter_var,command=self.ck_state_changed)
+        self.ck_filter.grid(row=7,column=0,sticky=W)
+        
         self.ck_ratio_var = IntVar()
         self.ck_ratio = Checkbutton(self,text="相似比较",variable=self.ck_ratio_var,command=self.ck_state_changed)
-        self.ck_ratio.grid(row=7,column=0,sticky=W)
-
+        self.ck_ratio.grid(row=7,column=1,sticky=W)
+        
         #self.lb_ratio_val = Label(self,text="最小相似度")
         #self.lb_ratio_val.grid(row=7,column=1,sticky=W+E)
 
-        self.txt_ratio_val = Entry(self,width=10,text="最小相似度")
-        self.txt_ratio_val.grid(row=7,column=1,sticky=W)
+        self.txt_ratio_val = Entry(self,text="最小相似度")
+        self.txt_ratio_val.grid(row=7,column=2,sticky=W)
+        
         self.txt_ratio_val.insert(END,"最小相似度")
-        self.bt_comparedata = Button(self,text="Start comparing...",fg="blue")
-        self.bt_comparedata.grid(row=7,column=2,columnspan=4,sticky=E)
+        self.bt_comparedata = Button(self,text="Start",fg="blue")
+        self.bt_comparedata.grid(row=7,column=2,columnspan=3,sticky=E)
         self.bt_comparedata.bind("<ButtonRelease-1>",self.comparedata)
         
-        self.msg_result = Message(self,text="msg result",fg="red",width=500)
+        self.msg_result = Message(self,text="",fg="red",width=500)
         self.msg_result.grid(row=8,columnspan=6)
 
-        print self.grid_size()
-        self.pack()
+        self.pack(side=LEFT)
 
 
     def ck_state_changed(self):
@@ -223,7 +230,6 @@ class Application(Frame):
         thread = threading.Thread(target=self.startprogressbarthread)
         thread.start()
 
-
     
     def startcomparedatathread(self,firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolumns,
                                secondincludecolumns,needratio,mini_ratio_percent):
@@ -287,7 +293,17 @@ def setmenu(master):
 
 if __name__ == "__main__":
     master = Tk()
-    setmenu(master)
+    ws = master.winfo_screenwidth()
+    hs = master.winfo_screenheight()
+    print "system.width=%s ,system.height=%s" %(ws,hs)
+    # calculate position x, y
+    width=300
+    height=425
+    x = (ws/2)-(width/2)   
+    y = (hs/2)-(height/2)
+    setmenu(master)    
     master.title("Compare data tool version 0.1")
     app = Application(master)
+    master.geometry('%dx%d%+d%+d'%(width,height,x,y))
     app.mainloop()
+    
