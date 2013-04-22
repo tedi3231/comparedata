@@ -172,6 +172,7 @@ class Application(Frame):
         headercolumns = dealcsv.get_headers(filename)
         for item in headercolumns:
             self.list_firstfilecolumns.insert(0,item)
+            self.list_firstincludecolumns.insert(0,item)
         
         #processbar = ttk.Progressbar(self,maximum=100,length=250)
         #self.processbar.pack()
@@ -185,7 +186,8 @@ class Application(Frame):
 
         headercolumns = dealcsv.get_headers(filename)
         for item in headercolumns:
-            self.list_secondfilecolumns.insert(0,item)     
+            self.list_secondfilecolumns.insert(0,item)   
+            self.list_secondincludecolumns.insert(0,item)            
 
             
     def comparedata(self,event):
