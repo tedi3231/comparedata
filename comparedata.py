@@ -60,11 +60,12 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
     secondval = secondval and secondval.strip()
 	
     if not firstval or not secondval:
-	return None
+        return None
     
     global filtercontent
     global need_filtercontent  
-
+    
+    print "need_filtercontent=%s" % need_filtercontent
     if need_filtercontent and filtercontent:
         for field in filtercontent:
             if field in firstval:
@@ -119,7 +120,7 @@ def comparecsv(firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolum
     @includecolumns should be included in result
     @reutrn [{},{}]
     """
-    print "need_filtercontent=%s" % need_filtercontent
+    
     data1 = dealcsv.get_content_with_directory(firstfile,determiter)
     data2 = dealcsv.get_content_with_directory(secondfile,determiter)
     return comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns,secondincludecolumns,needratio=needratio,
