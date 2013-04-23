@@ -11,7 +11,7 @@ import threading
 import datetime
 import time
 
-ALLOWFILETYPES =[("CSV File","*.csv"),("Excel File","*.xls")]
+ALLOWFILETYPES =[("CSV File","*.csv")]#,("Excel File","*.xls")]
 
 
 class Application(Frame):
