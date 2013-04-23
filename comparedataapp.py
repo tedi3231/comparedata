@@ -157,7 +157,8 @@ class Application(Frame):
     
     def selectFile(self,event):
         filename = tkFileDialog.askopenfilename(title="Please choose a file",filetypes=ALLOWFILETYPES)
-        
+        if not filename:
+            return
         if event and event.widget == self.bt_openfirstfile:
             self.selectfirstfile(filename)
         elif event and event.widget == self.bt_opensecondfile:
@@ -237,17 +238,21 @@ class Application(Frame):
                                                 self.ck_ratio_var.get(),self.txt_ratio_val.get(),))
         comparethread.start()
 
-        time.sleep(2)
+        time.sleep(1)
         thread = threading.Thread(target=self.startprogressbarthread)
         thread.start()
 
     
     def startcomparedatathread(self,firstfile,secondfile,firstcolumns,secondcolumns,firstincludecolumns,
                                secondincludecolumns,needratio,mini_ratio_percent):
-        #print "call startprogressbarthread time %s" % datetime.datetime.now()
+        #print "call startprogressbarthread time %s" % datetime.datetime.now()        
+        try:
+            mini_ratio_percent = float(mini_ratio_percent)
+        except ValueError:
+            mini_ratio_percent = 1.0
         result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
                                         list(firstincludecolumns),list(secondincludecolumns),
-                                         needratio=needratio,mini_ratio_percent=float(mini_ratio_percent))
+                                         needratio=needratio,mini_ratio_percent=mini_ratio_percent)
         if dealcsv.write_dict_to_csv(result,'result.csv'):
             self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
         else:

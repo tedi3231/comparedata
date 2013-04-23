@@ -34,7 +34,7 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
     result = []
 
     for first_row in data1:
-        firstval = first_row[firstcolumn]
+        #firstval = first_row[firstcolumn]
         for second_row in data2:
             result_row = _createrow(first_row,second_row,firstcolumn,secondcolumn,firstincludecolumns,secondincludecolumns,needratio=needratio,mini_ratio_percent=mini_ratio_percent)
             if result_row:
