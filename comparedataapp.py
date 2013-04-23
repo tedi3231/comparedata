@@ -192,6 +192,12 @@ class Application(Frame):
 
             
     def comparedata(self,event):
+        try:
+            with open("result.csv","w") as f:
+                pass
+        except IOError:
+            tkMessageBox.showerror(title="Error",message="结果文件被打开，请先关闭")
+            return
         #init thread argument
         self.progressbar['value']=0
         comparedata.hasproc_count = 0
@@ -253,20 +259,19 @@ class Application(Frame):
         result = comparedata.comparecsv(firstfile,secondfile,[firstcolumns],[secondcolumns],
                                         list(firstincludecolumns),list(secondincludecolumns),
                                          needratio=needratio,mini_ratio_percent=mini_ratio_percent)
-        if dealcsv.write_dict_to_csv(result,'result.csv'):
+        writeresult =  dealcsv.write_dict_to_csv(result,'result.csv')
+        if writeresult:          
             self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
         else:
-            self.msg_result["text"] = "文件生成失败"
+            self.msg_result["text"] = "文件生成失败,请检查文件是否已经被打开"
     
 
     def startprogressbarthread(self):
         print "thread.totalcount=%s,thread.hasproc_count=%s"%(comparedata.totalcount,comparedata.hasproc_count)
-        complete_percent =10 # int(float(comparedata.hasproc_count)/comparedata.totalcount*100)
-        #print "complete_percent=%s"%complete_percent
-        #while comparedata.hasproc_count<comparedata.totalcount:
+        complete_percent =1
         while complete_percent<100:
             complete_percent = int(float(comparedata.hasproc_count)/comparedata.totalcount*100)
-            print "complete_percent=%s"%complete_percent
+            #print "complete_percent=%s"%complete_percent
             self.msg_result["text"] = "当前任务的处理进度%s%%" % complete_percent
             #self.progressbar.step(complete_percent)
             self.progressbar["value"] = complete_percent

@@ -38,12 +38,15 @@ def write_dict_to_csv(items,filepath):
     for item in items:
         row = [str(item[key]) for key in header]
         rows.append(row)           
-    
-    with open(filepath,'wb') as csvfile:
-        spmwriter = csv.writer(csvfile,delimiter=',')
-        spmwriter.writerow(header)
-        for row in rows:
-            spmwriter.writerow(row)        
+    try:
+        with open(filepath,'wb') as csvfile:
+            spmwriter = csv.writer(csvfile,delimiter=',')
+            spmwriter.writerow(header)
+            for row in rows:
+                spmwriter.writerow(row)        
+    except IOError:
+        print "result.csv Io Error"
+        return 0
     return 1
     
 
