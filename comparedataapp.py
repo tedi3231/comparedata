@@ -332,5 +332,7 @@ if __name__ == "__main__":
     master.title("Compare data tool version 0.1")
     app = Application(master)
     master.geometry('%dx%d%+d%+d'%(width,height,x,y))
+    master.maxsize(width,height)
+    master.minsize(width,height)
     app.mainloop()
     
