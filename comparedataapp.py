@@ -91,9 +91,15 @@ class Application(Frame):
         
         self.msg_result = Message(self,text="",fg="red",width=500)
         self.msg_result.grid(row=8,columnspan=6)
-
+        self.msg_result.bind("<ButtonRelease-1>",self.open_result)
         self.pack(side=LEFT)
 
+    def open_result(self,event):
+        message = self.msg_result["text"]
+        if message and u"生成成功" in message:
+            os.system("start excel.exe result.csv")
+            return        
+        #tkMessageBox.showerror(title="Error",message=self.msg_result["text"])
     
     def ck_filter_changed(self):
         """
@@ -261,7 +267,7 @@ class Application(Frame):
                                          needratio=needratio,mini_ratio_percent=mini_ratio_percent)
         writeresult =  dealcsv.write_dict_to_csv(result,'result.csv')
         if writeresult:          
-            self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
+            self.msg_result["text"] = "文件生成成功，请点击打开文件"
         else:
             self.msg_result["text"] = "文件生成失败,请检查文件是否已经被打开"
     
@@ -279,7 +285,7 @@ class Application(Frame):
                 import time
                 time.sleep(1)
             else:
-                self.msg_result["text"] = "文件生成成功，请查看当前目录下的result.csv文件"
+                self.msg_result["text"] = "文件生成成功，请点击打开文件"
 
 
 def show_upload_filter():
