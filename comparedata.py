@@ -32,20 +32,23 @@ def comparedata(data1,data2,firstcolumns,secondcolumns,firstincludecolumns=None,
         raise Exception("data2 don't have special column %s"%secondcolumn)
     
     result = []
-
+    
+    firsttime = 1
     for first_row in data1:
         #firstval = first_row[firstcolumn]
         for second_row in data2:
-            result_row = _createrow(first_row,second_row,firstcolumn,secondcolumn,firstincludecolumns,secondincludecolumns,needratio=needratio,mini_ratio_percent=mini_ratio_percent)
+            result_row = _createrow(first_row,second_row,firstcolumn,secondcolumn,firstincludecolumns,secondincludecolumns,needratio=needratio,mini_ratio_percent=mini_ratio_percent,firsttime=firsttime)
             if result_row:
                 result.append(result_row)
-                break
+                firsttime = 0
+                if not needratio:
+                    break
         hasproc_count = hasproc_count + len(data2)
         #print "comparedata.hasproc_count=%s"%hasproc_count
     return result
 
 
-def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumns=None,secondincludecolumns=None,needratio=0,mini_ratio_percent=1.0):
+def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumns=None,secondincludecolumns=None,needratio=0,mini_ratio_percent=1.0,firsttime=0):
     """
     generate one result row
     @first_row          first row 
@@ -99,8 +102,11 @@ def _createrow(first_row,second_row, firstcolumn,secondcolumn,firstincludecolumn
 
     if firstincludecolumns:
         for item in firstincludecolumns:            
-            result['data1_%s'%item] = first_row[item]
-        
+            if firsttime:
+                result['data1_%s'%item] = first_row[item]
+            else:
+                result['data1_%s'%item] = ''
+
     result['data2_%s'%secondcolumn] = second_row[secondcolumn]
 
     if secondincludecolumns:    
